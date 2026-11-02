@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>月齢別お買い物チェックリスト（妊娠中〜12か月）｜あかちゃん買い物まよったら</title>
+<meta name="description" content="妊娠中から12か月まで、月齢を選ぶとその時期に必要な物のリストができます。チェック、進捗表示、印刷に対応。入力内容は送信されません。">
+<link rel="canonical" href="https://rinkagit.github.io/baby-navi/checklist.html">
+<meta property="og:title" content="月齢別お買い物チェックリスト｜あかちゃん買い物まよったら">
+<meta property="og:description" content="月齢を選ぶだけで、その時期に必要な物がリストに。チェック・印刷対応。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rinkagit.github.io/baby-navi/checklist.html">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site-header"><a class="site-title" href="index.html">あかちゃん買い物まよったら</a><nav class="site-nav"><a href="index.html">トップ</a><a href="checklist.html">チェックリスト</a><a href="disclosure.html">開示</a></nav></header>
+<p class="pr-note">【PR】本ページは広告（Amazonアソシエイト）を含みます。</p>
+<main class="container">
+<nav class="breadcrumb"><a href="index.html">トップ</a> &gt; 月齢別お買い物チェックリスト</nav>
+<h1>月齢別お買い物チェックリスト</h1>
+<p class="lead">月齢を選ぶと、その時期にそろえたい物のリストができます。リストは目安です。家庭の事情や園・病院の指定に合わせて取捨選択してください。入力内容はどこにも送信されず、ページを閉じるとチェックは消えます。</p>
+
+<div class="age-tabs" id="age-tabs" role="group" aria-label="月齢を選ぶ"></div>
+
+<h2 class="print-title" id="print-title"></h2>
+<div class="progress-wrap">
+<p class="progress-text" id="progress-text">月齢を選んでください</p>
+<div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+<div class="tool-actions">
+<button type="button" class="btn" id="btn-print">印刷する</button>
+<button type="button" class="btn" id="btn-reset">チェックをはずす</button>
+</div>
+<div id="list-area" aria-live="polite"><p class="empty-msg">上のボタンから月齢を選ぶと、リストが表示されます。</p></div>
+
+<p class="callout">各項目の「Amazonで探す」ボタンは検索結果へのリンクです。価格・在庫・仕様は、Amazonの商品ページで必ずご確認ください。選び方の基準は<a href="index.html">ガイド一覧</a>にまとめています。</p>
+</main>
+<footer class="site-footer"><p>運営：保育士経験7年・0歳児の母</p><p><a href="disclosure.html">広告・プライバシーについて</a></p></footer>
+<script src="assets/config.js"></script><script src="assets/main.js"></script>
+<script>
+(function () {
+  // 月齢別データ。items: [名前, ひとこと, Amazon検索語, 関連ガイド(任意)]
+  var AGES = [
+    { id: "pregnant", label: "妊娠中", groups: [
+      { title: "入院・退院", items: [
+        ["産褥ショーツ・授乳ブラ", "産後は体型が変わるので数は少なめから", "産褥ショーツ"],
+        ["新生児用の肌着・ウェア", "洗い替えを含め数枚。季節で厚さを選ぶ", "新生児 肌着 セット"],
+        ["退院時のおくるみ", "季節に合わせた薄手・厚手を選ぶ", "おくるみ 新生児"]
+      ]},
+      { title: "授乳・ミルク", items: [
+        ["哺乳びん", "まず1〜2本。母乳派でも1本あると安心", "哺乳びん 新生児", "g01-nyuhyubin.html"],
+        ["消毒グッズ", "煮沸・薬液・電子レンジなど運用方法で選ぶ", "哺乳びん 消毒", "g01-nyuhyubin.html"],
+        ["授乳クッション", "座り方や体格に合うかを確認", "授乳クッション"]
+      ]},
+      { title: "おむつ・お手入れ", items: [
+        ["新生児用おむつ（少量）", "まとめ買いはサイズが合わなくなる前提で控えめに", "新生児 おむつ", "g02-omutsu.html"],
+        ["おしりふき", "", "おしりふき 新生児", "g03-oshirifuki.html"],
+        ["ベビー用の沐浴用品", "洗い場やお風呂の環境に合わせて", "ベビーバス"]
+      ]},
+      { title: "寝る・移動", items: [
+        ["ベビー布団またはベビーベッド", "寝室の広さと上の子・ペットの有無で選ぶ", "ベビー布団 セット"],
+        ["チャイルドシート", "退院時に車へ乗せるなら必須。車への適合を確認", "チャイルドシート 新生児", "g06-childseat.html"]
+      ]},
+      { title: "準備リスト全体", items: [
+        ["出産準備リストの見直し", "要る・産後で間に合う・要らないを切り分ける", "出産準備 ベビー用品", "g12-shussan.html"]
+      ]}
+    ]},
+    { id: "m0-1", label: "0〜1か月", groups: [
+      { title: "毎日の消耗品", items: [
+        ["おむつ（新生児〜S）", "サイズアップのサインを見て買い足す", "新生児 おむつ", "g02-omutsu.html"],
+        ["おしりふき・コットン", "詰替運用にすると経済的", "おしりふき 詰替", "g03-oshirifuki.html"],
+        ["ガーゼ・スタイ", "吐き戻しやよだれに。洗い替えを多めに", "ガーゼ スタイ 新生児"]
+      ]},
+      { title: "お世話", items: [
+        ["爪切り（ベビー用）", "小さな爪に合うサイズ", "ベビー 爪切り"],
+        ["体温計", "測定時間と測り方を確認", "体温計 赤ちゃん"],
+        ["保湿剤", "肌の状態が気になる場合は小児科で相談", "ベビー 保湿"]
+      ]},
+      { title: "お出かけ（健診など）", items: [
+        ["抱っこ紐（新生児対応）", "新生児から使えるか、対象体重を確認", "抱っこ紐 新生児", "g04-dakkohimo.html"],
+        ["ベビーカー", "生活動線と車への積みやすさで検討", "ベビーカー 新生児", "g05-stroller.html"]
+      ]}
+    ]},
+    { id: "m2-3", label: "2〜3か月", groups: [
+      { title: "生活リズム・安全", items: [
+        ["ベビーモニター", "夜間運用の方法（Wi-Fi型か専用型）で選ぶ", "ベビーモニター", "g07-babymonitor.html"],
+        ["鼻吸い器", "家庭で使いやすい方式を。不安なら小児科へ", "鼻吸い器 ベビー", "g08-hanasuiki.html"],
+        ["おもちゃ（ガラガラ・布絵本）", "誤飲しにくい大きさか確認", "ガラガラ 赤ちゃん"]
+      ]},
+      { title: "お世話", items: [
+        ["おむつ（S）", "サイズアップのサインを確認", "おむつ S テープ", "g02-omutsu.html"],
+        ["ベビーカーのレインカバー", "対応機種かを確認", "ベビーカー レインカバー"],
+        ["ベビー用の日よけ", "季節に応じて", "ベビーカー 日よけ"]
+      ]}
+    ]},
+    { id: "m4-6", label: "4〜6か月", groups: [
+      { title: "離乳食の準備", items: [
+        ["離乳食用の調理セット", "初期は少数精鋭。すり鉢・小鍋など", "離乳食 調理セット", "g09-rinyushoku.html"],
+        ["フリージング容器", "小分けしやすい容量を確認", "離乳食 冷凍 保存容器", "g09-rinyushoku.html"],
+        ["スプーン・食器", "口の大きさに合うサイズ", "離乳食 スプーン"],
+        ["ベビーチェア", "足置きの有無と姿勢の安定を確認", "ベビーチェア 食事"]
+      ]},
+      { title: "動きが増える時期", items: [
+        ["おむつ（M）", "ずり這いが始まるとパンツ型も検討", "おむつ M パンツ", "g02-omutsu.html"],
+        ["ベビーゲート・コーナーガード", "家の間取りに合わせて", "ベビーゲート"],
+        ["歯がため", "月齢対象を確認", "歯がため"]
+      ]}
+    ]},
+    { id: "m7-9", label: "7〜9か月", groups: [
+      { title: "食事", items: [
+        ["離乳食の保存・解凍道具", "電子レンジ対応か確認", "離乳食 電子レンジ 容器", "g09-rinyushoku.html"],
+        ["食事用エプロン", "ポケット付きは食べこぼしの受けに", "食事用エプロン ベビー"],
+        ["ストローマグ・コップ", "練習用として段階的に", "ストローマグ"]
+      ]},
+      { title: "動き・安全", items: [
+        ["ベビー用靴下・ロンパース", "動きやすさと洗い替えの数", "ベビー ロンパース"],
+        ["コンセントカバー・角ガード", "手が届く範囲を見直す", "コンセントカバー 赤ちゃん"],
+        ["防災備蓄（おむつ・ミルク）", "ローリングストックで量を確認", "液体ミルク 備蓄", "g11-bousai.html"]
+      ]}
+    ]},
+    { id: "m10-12", label: "10〜12か月", groups: [
+      { title: "保育園・復職の準備", items: [
+        ["名前付けグッズ", "布用スタンプやお名前シール", "お名前シール 布用", "g10-hoikuen.html"],
+        ["着替え・洗い替え", "園の指定枚数を確認してから", "保育園 着替え セット", "g10-hoikuen.html"],
+        ["お昼寝用品・スタイ", "園の指定を読んでから購入", "保育園 スタイ", "g10-hoikuen.html"]
+      ]},
+      { title: "歩き始め", items: [
+        ["ファーストシューズ", "足のサイズを測ってから。店頭での試し履きも検討", "ベビーシューズ ファーストシューズ"],
+        ["おむつ（M〜L）", "体重とフィット感を見て", "おむつ L パンツ", "g02-omutsu.html"],
+        ["チャイルドシートの見直し", "月齢・体格に合う規格か確認", "チャイルドシート 回転式", "g06-childseat.html"]
+      ]}
+    ]}
+  ];
+
+  var tabsEl = document.getElementById("age-tabs");
+  var listEl = document.getElementById("list-area");
+  var fillEl = document.getElementById("progress-fill");
+  var textEl = document.getElementById("progress-text");
+  var titleEl = document.getElementById("print-title");
+  var current = null;
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text) e.textContent = text;
+    return e;
+  }
+
+  function updateProgress() {
+    var boxes = listEl.querySelectorAll("input[type=checkbox]");
+    var done = 0;
+    for (var i = 0; i < boxes.length; i++) {
+      var li = boxes[i].closest(".check-item");
+      if (boxes[i].checked) { done++; li.classList.add("done"); } else { li.classList.remove("done"); }
+    }
+    var total = boxes.length;
+    textEl.textContent = total ? ("進捗：" + done + " / " + total + " 個（" + Math.round(done / total * 100) + "%）") : "月齢を選んでください";
+    fillEl.style.width = total ? (done / total * 100) + "%" : "0";
+  }
+
+  function render(age) {
+    current = age;
+    listEl.textContent = "";
+    titleEl.textContent = "お買い物チェックリスト：" + age.label;
+    var n = 0;
+    age.groups.forEach(function (g) {
+      var sec = el("section", "check-group");
+      sec.appendChild(el("h2", "", g.title));
+      var ul = el("ul", "check-list");
+      g.items.forEach(function (it) {
+        n++;
+        var id = "item-" + n;
+        var li = el("li", "check-item");
+        var cb = el("input"); cb.type = "checkbox"; cb.id = id;
+        cb.addEventListener("change", updateProgress);
+        var lb = el("label"); lb.htmlFor = id;
+        lb.appendChild(document.createTextNode(it[0]));
+        if (it[1]) lb.appendChild(el("span", "check-note", it[1]));
+        li.appendChild(cb); li.appendChild(lb);
+        if (it[3]) {
+          var g1 = el("a", "btn btn-small", "選び方ガイド");
+          g1.href = "guides/" + it[3];
+          li.appendChild(g1);
+        }
+        var a = el("a", "btn btn-amazon btn-small", "Amazonで探す");
+        a.setAttribute("data-search", it[2]);
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+      sec.appendChild(ul);
+      listEl.appendChild(sec);
+    });
+    applyAmazonLinks(listEl); // config.js のリンク生成を再利用
+    var tabs = tabsEl.querySelectorAll("button");
+    for (var i = 0; i < tabs.length; i++) tabs[i].setAttribute("aria-pressed", tabs[i].getAttribute("data-id") === age.id ? "true" : "false");
+    updateProgress();
+  }
+
+  function select(id, updateHash) {
+    for (var i = 0; i < AGES.length; i++) {
+      if (AGES[i].id === id) {
+        render(AGES[i]);
+        if (updateHash && history.replaceState) history.replaceState(null, "", "#" + id);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  AGES.forEach(function (age) {
+    var b = el("button", "age-tab", age.label);
+    b.type = "button"; b.setAttribute("data-id", age.id); b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", function () { select(age.id, true); });
+    tabsEl.appendChild(b);
+  });
+
+  document.getElementById("btn-print").addEventListener("click", function () { window.print(); });
+  document.getElementById("btn-reset").addEventListener("click", function () {
+    var boxes = listEl.querySelectorAll("input[type=checkbox]");
+    for (var i = 0; i < boxes.length; i++) boxes[i].checked = false;
+    updateProgress();
+  });
+  function selectFromHash() {
+    if (!select(location.hash.replace("#", ""), false)) select(AGES[0].id, false);
+  }
+  window.addEventListener("hashchange", selectFromHash);
+  selectFromHash();
+})();
+</script>
+</body>
+</html>
